@@ -15,8 +15,7 @@ class ClockWorkCard extends HTMLElement {
         const config = this.config;
         const locale = config.locale;
         const _locale = locale ? locale : undefined;
-        var _other_timezones = config.other_time;
-        
+
         const entityId = config.entity;
 
         // Need to check for safari as safari dates are parsed as being UTC when not specified.
@@ -42,11 +41,11 @@ class ClockWorkCard extends HTMLElement {
 
 
 
-        
+
         if (_date_time == "Invalid Date") {
             throw new Error("Invalid date. Ensure its a ISO Date")
         }
-        
+
         //Format the Time
         var _time = _date_time.toLocaleTimeString(_locale, {
             hour: 'numeric',
@@ -60,33 +59,6 @@ class ClockWorkCard extends HTMLElement {
             month : 'long'
         });
 
-        //Build List of Other Timezones
-        //
-        var otherclocks = `
-            <div class = "other_clocks">
-            `;
-        var i;
-        var j = _other_timezones.length; //TODO: Recommend max 3.
-        for (i= 0; i < j; i++) {
-            //Format other timezones.
-            var _tztime = _date_time.toLocaleTimeString(_locale, {
-                hour: 'numeric',
-                minute: 'numeric',
-                timeZone: _other_timezones[i],
-                weekday: 'short'
-            }); 
-            
-            // List other Timezones.
-            otherclocks = otherclocks + `
-                <div class="tz_locale">${_other_timezones[i]} </div> 
-                <div class="otime"> ${_tztime} </div>
-            `;
-            //console.log(_tztime);
-        };
-        otherclocks = otherclocks + `
-            </div>
-            `;
-        /*console.log(otherclocks);*/
 
         // Build Current Local Time
         var local_time = `
@@ -95,10 +67,10 @@ class ClockWorkCard extends HTMLElement {
                 <div class="date" id="date">${_date}</div>
             </div>
         `;
-        
-        var clock_contents = local_time + otherclocks;
+
+        var clock_contents = local_time;
        /* console.log("Clock Contents: " + clock_contents);*/
-        
+
        this.shadowRoot.getElementById('container').innerHTML = clock_contents;
     }
 
@@ -108,7 +80,7 @@ class ClockWorkCard extends HTMLElement {
         // if (!config.entity) {
         //     throw new Error('You must define an entity')
         // }
-        
+
         /*console.log(_other_timezones);*/
         const root = this.shadowRoot;
         if (root.lastChild) root.removeChild(root.lastChild);
@@ -118,7 +90,7 @@ class ClockWorkCard extends HTMLElement {
         const card = document.createElement('ha-card');
         const content = document.createElement('div');
         const style = document.createElement('style')
-  
+
         style.textContent = `
             .container {
                 padding: 5px 5px 5px;
@@ -128,21 +100,9 @@ class ClockWorkCard extends HTMLElement {
                 align-items: flex-start;
             }
             .clock {
-                
+
                 padding: 5px 5px 5px 0px;
                 margin: auto;
-            }
-            .other_clocks {
-                float: right;
-                margin: auto;
-
-            }
-            .otime {
-                padding: 0px 5px 2px;
-                font-size: 14px;
-                font-family: var(--paper-font-headline_-_font-family);
-                letter-spacing: var(--paper-font-headline_-_letter-spacing);
-                text-rendering: var(--paper-font-common-expensive-kerning_-_text-rendering);
             }
             .tz_locale {
                 padding: 0px 5px 1px;
@@ -151,9 +111,9 @@ class ClockWorkCard extends HTMLElement {
                 font-family: var(--paper-font-headline_-_font-family);
                 letter-spacing: var(--paper-font-headline_-_letter-spacing);
                 text-rendering: var(--paper-font-common-expensive-kerning_-_text-rendering);
-            }     
+            }
             .time {
-                padding: 
+                padding:
                 font-family: var(--paper-font-headline_-_font-family);
                 -webkit-font-smoothing: var(--paper-font-headline_-_-webkit-font-smoothing);
                 font-size: 56px;
@@ -171,22 +131,22 @@ class ClockWorkCard extends HTMLElement {
                 letter-spacing: var(--paper-font-headline_-_letter-spacing);
                 line-height: var(--paper-font-headline_-_line-height);
                 text-rendering: var(--paper-font-common-expensive-kerning_-_text-rendering);
-            }          
+            }
         `;
-     
+
         content.id = "container";
         content.className = "container";
         card.header = config.title;
         card.appendChild(style);
         card.appendChild(content);
-        
+
         root.appendChild(card);
       }
-  
+
     // The height of the card.
     getCardSize() {
       return 3;
     }
 }
-  
+
 customElements.define('clockwork-card', ClockWorkCard);
